@@ -202,12 +202,14 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
                                         currentPlace = placeLikelihood.getPlace();
                                     }
                                 }
-                                if (currentPlace !=null){
+                                if (currentPlace !=null) {
                                     mLocationTextView.setText(
                                             getString(R.string.alamat_text,
                                                     currentPlace.getName(),
                                                     result, System.currentTimeMillis())
                                     );
+                                    setTipeLokasi(currentPlace);
+                                }
                                     likelyPlaces.release();
                                 } else {
                                     mLocationTextView.setText(
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
                                     );
                                 }
                             }
-                        }
+
                     });
             mPlaceDetectionClient.getCurrentPlace(null);
             // menampilkan alamat
@@ -235,4 +237,29 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         return locationRequest;
     }
+
+    private void setTipeLokasi(Place currentPlace){
+        int drawableID = -1;
+        for(Integer placeType : currentPlace.getPlaceTypes()){
+            switch (placeType){
+                case Place.TYPE_UNIVERSITY:
+                    drawableID = R.drawable.school;
+                    break;
+                case Place.TYPE_CAFE:
+                    drawableID = R.drawable.coffee;
+                    break;
+                case Place.TYPE_SHOPPING_MALL:
+                    drawableID = R.drawable.shopping;
+                    break;
+                case Place.TYPE_MOVIE_THEATER:
+                    drawableID = R.drawable.movie;
+                    break;
+            }
+        }
+        if (drawableID < 0){
+            drawableID = R.drawable.unknown;
+        }
+        mAndroidImageView.setImageResource(drawableID);
+    }
 }
+

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,18 +29,23 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import com.google.android.gms.tasks.Task;
 
 public class MainActivity extends AppCompatActivity implements DapatkanAlamatTask.onTaskSelesai {
 
     private Button mLocationButton;
+    private Button btnlokasi;
     private TextView mLocationTextView;
     private ImageView mAndroidImageView;
     private AnimatorSet mRotateAnim;
     private Location mLastLocation;
     private boolean mTrackingLocation;
     private static final int  REQUEST_LOCATION_PERMISSION=1;
+    private static final int REQUEST_PICK_PLACE = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationCallback mLocationCallback;
 
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
         mLocationButton=(Button) findViewById(R.id.button_location);
         mLocationTextView =(TextView) findViewById(R.id.textView_location);
         mAndroidImageView = (ImageView) findViewById(R.id.imageView_android);
+        btnlokasi =(Button) findViewById(R.id.lokasi);
 
         mRotateAnim = (AnimatorSet) AnimatorInflater.loadAnimator(this,R.animator.rotate);
         mRotateAnim.setTarget(mAndroidImageView);
@@ -77,6 +84,18 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
                 mLocationButton.setText("Stop tracking lokasi");
             }
         });
+        btnlokasi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();// untuk mengekesekusi placepicker
+                try{
+                    startActivityForResult(builder.build(MainActivity.this), REQUEST_PICK_PLACE);
+                }catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         mLocationCallback = new LocationCallback()
         {
@@ -155,9 +174,25 @@ public class MainActivity extends AppCompatActivity implements DapatkanAlamatTas
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK){
+            // mendapatkan object dr placepicker
+            Place place = PlacePicker.getPlace(this,data );
+            setTipeLokasi(place);
+            mLocationTextView.setText(
+                    getString(R.string.alamat_text,
+                            place.getName(),
+                            place.getAddress(),
+                            System.currentTimeMillis())
+            );
+        } else{
+            mLocationTextView.setText("belum pilih lokasi bebs");
 
 
-
+        }
+    }
 
     public void onRequestPermissionsResult(
             int requestCode, @NonNull String[]permissions, @NonNull int[] grantResults){

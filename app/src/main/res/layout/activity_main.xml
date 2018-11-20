@@ -18,15 +18,29 @@
 
     <Button
         android:id="@+id/button_location"
-        android:layout_width="275dp"
+        android:layout_width="131dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="37dp"
-        android:layout_marginStart="48dp"
-        android:text="Go Tracking Location !"
         android:layout_alignParentLeft="true"
-        android:layout_marginLeft="48dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginBottom="20dp"
+        android:text="Go Tracking Location !" />
+
+    <Button
+        android:id="@+id/lokasi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:layout_marginBottom="21dp"
+        android:text="Pilih Lokasi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="127dp" />
 
     <TextView
         android:id="@+id/textView_location"
